@@ -2,6 +2,8 @@ FROM ubuntu:14.04.2
 
 MAINTAINER khiraiwa
 
+ENV KIBANA_VERSION 4.2.0
+
 # Install Java
 RUN \
   apt-get update && \
@@ -23,18 +25,18 @@ RUN \
 # Install Kibana
 RUN \
   cd /home/kibana && \
-  wget http://download.elastic.co/kibana/kibana-snapshot/kibana-4.2.0-snapshot-linux-x64.zip && \
-  unzip kibana-4.2.0-snapshot-linux-x64.zip && \
-  rm -f kibana-4.2.0-snapshot-linux-x64.zip
+  wget http://download.elastic.co/kibana/kibana-snapshot/kibana-${KIBANA_VERSION}-snapshot-linux-x64.zip && \
+  unzip kibana-${KIBANA_VERSION}-snapshot-linux-x64.zip && \
+  rm -f kibana-${KIBANA_VERSION}-snapshot-linux-x64.zip
 
 # Install Marvel plugin
 RUN \
   cd /home/kibana && \
   wget https://download.elastic.co/elasticsearch/marvel/marvel-latest.tar.gz && \
-  /home/kibana/kibana-4.2.0-snapshot-linux-x64/bin/kibana plugin --install marvel --url file:///home/kibana/marvel-latest.tar.gz && \
+  /home/kibana/kibana-${KIBANA_VERSION}-snapshot-linux-x64/bin/kibana plugin --install marvel --url file:///home/kibana/marvel-latest.tar.gz && \
   rm -f marvel-latest.tar.gz
 
-ADD config/kibana.yml /home/kibana/kibana-4.2.0-snapshot-linux-x64/config/kibana.yml
+ADD config/kibana.yml /home/kibana/kibana-${KIBANA_VERSION}-snapshot-linux-x64/config/kibana.yml
 
 RUN mkdir -p /data_kibana/
 VOLUME ["/data_kibana/"]
@@ -45,8 +47,8 @@ RUN \
   chown -R kibana:kibana /home/kibana
 
 USER kibana
-WORKDIR /home/kibana/kibana-4.2.0-snapshot-linux-x64
+WORKDIR /home/kibana/kibana-${KIBANA_VERSION}-snapshot-linux-x64
 EXPOSE 5601
 CMD \
   sudo chown -R kibana:kibana /data_kibana && \
-  /home/kibana/kibana-4.2.0-snapshot-linux-x64/bin/kibana
+  /home/kibana/kibana-${KIBANA_VERSION}-snapshot-linux-x64/bin/kibana
