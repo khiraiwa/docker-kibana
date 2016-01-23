@@ -52,5 +52,6 @@ USER kibana
 WORKDIR /home/kibana/kibana-${KIBANA_VERSION}-snapshot-linux-x64
 EXPOSE 5601
 CMD \
+  sed -i -e"s|ELASTICSEARCH_HOST|${ELASTICSEARCH_HOST}|g" /home/kibana/kibana-${KIBANA_VERSION}-snapshot-linux-x64/config/kibana.yml && \
   sudo chown -R kibana:kibana /data_kibana && \
   /home/kibana/kibana-${KIBANA_VERSION}-snapshot-linux-x64/bin/kibana
